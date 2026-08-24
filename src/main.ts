@@ -2,7 +2,7 @@ const message_input = document.getElementById(
   "message-input",
 ) as HTMLInputElement | null;
 
-import "./styles/style.css";
+import "./frontend/styles/style.css";
 
 message_input?.addEventListener("keyup", (event: KeyboardEvent) => {
   if (event.key === "Enter") {

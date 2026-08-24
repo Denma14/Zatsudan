@@ -1,0 +1,10 @@
+#text-display {
+  background-color: #b1b1b1;
+
+  min-width: 100px;
+  min-height: 100px;
+  width: 70%;
+  height: 50vh;
+
+  padding: 20px;
+}
