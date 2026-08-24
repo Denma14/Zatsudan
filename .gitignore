@@ -4,3 +4,4 @@ package.json
 tsconfig.json
 declarations.d.ts
 eslint.config.mts
+vite.config.ts

@@ -1,9 +1,9 @@
-const ws = new WebSocket("ws://localhost:8080");
+const ws = new WebSocket("ws://192.168.1.208:8080");
 
 ws.addEventListener("open", (event) => {
   console.log("ws connection established xdx");
 
-  ws.send("something");
+  ws.send("connection established????");
 });
 
 ws.addEventListener("message", (event) => {
@@ -17,3 +17,11 @@ ws.addEventListener("close", (event) => {
 ws.addEventListener("error", (error) => {
   console.error("WebSocket error:", error);
 });
+
+export function xdx(payload?: any) {
+  if (payload) {
+    ws.send(payload);
+  } else {
+    ws.send("sent a message");
+  }
+}
