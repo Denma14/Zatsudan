@@ -13,7 +13,7 @@ export function makeMessageDiv(messageObject: Message) {
     messageDiv.className = "message-div";
 
     const id = document.createElement("h3");
-    id.textContent = messageObject["id"];
+    id.textContent = messageObject["id"] + ":";
 
     const message = document.createElement("h3");
     message.textContent = messageObject["message"];

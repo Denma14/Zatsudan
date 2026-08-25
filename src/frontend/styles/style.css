@@ -1,10 +1,12 @@
 #text-display {
-  background-color: #b1b1b1;
+  background-color: #777777;
 
   min-width: 100px;
   min-height: 100px;
   width: 70%;
   height: 50vh;
+
+  overflow: auto;
 
   padding: 20px;
 
@@ -14,9 +16,11 @@
 }
 
 .message-divs {
-  background-color: #ff0000;
+  background-color: #ff0000 !important;
   color: red;
   opacity: 100;
+
+  overflow: auto;
 
   position: relative;
   z-index: 9999;

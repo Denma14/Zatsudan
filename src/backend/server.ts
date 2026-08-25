@@ -1,20 +1,12 @@
 import NodeWebsocket, { WebSocketServer } from "ws";
-import type {
-  ClientOptions,
-  RawData,
-  WebSocketEventMap,
-  Event,
-  ErrorEvent,
-  CloseEvent,
-  MessageEvent,
-  EventListenerOptions,
-} from "ws";
 import { add_message, get_messages } from "./queue.js";
 
 export type Message = {
   id: string;
   message: string;
 };
+
+const clientIds = new Map();
 
 const wss = new WebSocketServer({
   port: 8080,
@@ -33,7 +25,12 @@ wss.on("connection", function connection(socket: any) {
 
     add_message();
   });*/
+  const id = "Anon_" + Math.random().toString(36).substring(2, 10);
+  console.log("client ID is : ", id);
+  clientIds.set(socket, id);
   console.log("wss made");
+
+  socket.send(JSON.stringify({ eventType: "S_hand_id", payload: id }));
 
   //-- Set ups the message logs
   const messageArray = {
@@ -44,7 +41,7 @@ wss.on("connection", function connection(socket: any) {
 
   //-------------------------------------------
 
-  socket.on("message", function message(data: Buffer, isBinary: any) {
+  socket.on("message", (data: Buffer, isBinary: any) => {
     console.log("a client sent a message");
     const message = JSON.parse(data.toString("utf-8"));
     console.log("C_message is : ", message);
@@ -80,3 +77,6 @@ wss.on("connection", function connection(socket: any) {
     }
   });
 });
+
+/* Map out disconnection logic here */
+wss.on("close", (socket: any) => {});

@@ -1,5 +1,7 @@
 import { xdx, makeMessageDiv } from "./ui.js";
 
+let client_id: string;
+
 const ws = new WebSocket("ws://192.168.1.208:8080");
 
 ws.addEventListener("open", (event) => {
@@ -16,6 +18,8 @@ ws.addEventListener("message", (event) => {
     xdx(eventData["payload"]);
   } else if (eventData["eventType"] === "S_new_message") {
     makeMessageDiv(eventData["payload"]);
+  } else if (eventData["eventType"] === "S_hand_id") {
+    client_id = eventData["payload"];
   }
 });
 // Executes when the connection is closed, providing the close code and reason.
@@ -32,7 +36,7 @@ export function sendMessageServer(payload?: string) {
     ws.send(
       JSON.stringify({
         eventType: "C_new_message",
-        payload: { id: null, message: payload },
+        payload: { id: client_id, message: payload },
       }),
     );
   } else {
