@@ -7,4 +7,24 @@
   height: 50vh;
 
   padding: 20px;
+
+  overflow: auto;
+
+  display: grid;
+}
+
+.message-divs {
+  background-color: #ff0000;
+  color: red;
+  opacity: 100;
+
+  position: relative;
+  z-index: 9999;
+
+  max-width: 80px;
+  max-height: 10px;
+  width: 50px;
+  height: 10px;
+
+  padding: 20px;
 }

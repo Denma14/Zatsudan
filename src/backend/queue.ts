@@ -9,9 +9,13 @@ export function sum(a: number, b: number) {
   return a + b;
 }
 
-export function add_message(message_string?: string, id?: string) {
+export function add_message(message_string?: string, ID?: string) {
   if (message_string) {
-    const message: Message = { id: "xdx", message: message_string };
+    if (!ID) {
+      var message: Message = { id: "xdx", message: message_string };
+    } else {
+      var message: Message = { id: ID, message: message_string };
+    }
 
     message_queue.push(message);
     if (message_queue.length > 10000) {

@@ -1,5 +1,5 @@
 import { expect, test, describe } from "vitest";
-import { sum, add_message, get_messages, Message } from "./queue";
+import { sum, add_message, get_messages, type Message } from "./queue.js";
 
 test("adds 1 + 2 to equal 3", () => {
   expect(sum(1, 2)).toBe(3);

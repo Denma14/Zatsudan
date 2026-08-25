@@ -1,13 +1,19 @@
+import { xdx } from "./ui.js";
+
 const ws = new WebSocket("ws://192.168.1.208:8080");
 
 ws.addEventListener("open", (event) => {
   console.log("ws connection established xdx");
-
-  ws.send("connection established????");
 });
 
 ws.addEventListener("message", (event) => {
-  console.log("Message from server: ", event.data);
+  console.log("got a message from server");
+  const eventData = JSON.parse(event.data);
+  console.log(eventData);
+  console.log(eventData["eventType"]);
+  if (eventData["eventType"] === "init") {
+    xdx(eventData["payload"]);
+  }
 });
 // Executes when the connection is closed, providing the close code and reason.
 ws.addEventListener("close", (event) => {
@@ -18,7 +24,7 @@ ws.addEventListener("error", (error) => {
   console.error("WebSocket error:", error);
 });
 
-export function xdx(payload?: any) {
+export function sendMessageServer(payload?: any) {
   if (payload) {
     ws.send(payload);
   } else {
