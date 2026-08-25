@@ -7,22 +7,29 @@ export type Message = {
   message: string;
 };
 
+export function makeMessageDiv(messageObject: Message) {
+  if (textDisplay) {
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "message-div";
+
+    const id = document.createElement("h3");
+    id.textContent = messageObject["id"];
+
+    const message = document.createElement("h3");
+    message.textContent = messageObject["message"];
+
+    textDisplay.appendChild(messageDiv);
+    messageDiv.appendChild(id);
+    messageDiv.appendChild(message);
+  }
+}
+
 function makeDivs(payload: Message[]) {
   if (textDisplay) {
     for (let i in payload) {
-      console.log("message is :", i);
-      const messageDiv = document.createElement("div");
-      messageDiv.className = "message-div";
-
-      const id = document.createElement("h3");
-      id.textContent = payload[i]["id"];
-
-      const message = document.createElement("h3");
-      message.textContent = payload[i]["message"];
-
-      textDisplay.appendChild(messageDiv);
-      messageDiv.appendChild(id);
-      messageDiv.appendChild(message);
+      if (payload[i]) {
+        makeMessageDiv(payload[i]);
+      }
     }
   }
 }

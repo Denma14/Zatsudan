@@ -11,6 +11,11 @@ import type {
 } from "ws";
 import { add_message, get_messages } from "./queue.js";
 
+export type Message = {
+  id: string;
+  message: string;
+};
+
 const wss = new WebSocketServer({
   port: 8080,
 });
@@ -41,17 +46,37 @@ wss.on("connection", function connection(socket: any) {
 
   socket.on("message", function message(data: Buffer, isBinary: any) {
     console.log("a client sent a message");
-    const message = data.toString("utf-8");
+    const message = JSON.parse(data.toString("utf-8"));
+    console.log("C_message is : ", message);
 
-    add_message(message, "xdx");
+    if (message["eventType"] === "C_new_message") {
+      const C_new_message = add_message(
+        message["payload"]["message"],
+        message["payload"]["id"],
+      );
+      console.log(C_new_message);
 
-    console.log(message);
-    wss.clients.forEach(function each(client: any) {
-      if (client.readyState === NodeWebsocket.OPEN) {
-        console.log("firing clients");
-        console.log(get_messages());
-        client.send("xdx server sent a message");
+      if (!C_new_message) {
+        console.error("Failed to add message.");
+        return;
       }
-    });
+
+      wss.clients.forEach(function each(client: any) {
+        if (client.readyState === NodeWebsocket.OPEN) {
+          console.log("firing clients");
+          console.log(get_messages());
+          console.log("sending :", {
+            eventType: "S_new_message",
+            payload: C_new_message,
+          });
+          client.send(
+            JSON.stringify({
+              eventType: "S_new_message",
+              payload: C_new_message,
+            }),
+          );
+        }
+      });
+    }
   });
 });
