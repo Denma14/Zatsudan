@@ -1,4 +1,9 @@
-import { sendMessageServer } from "./frontend/client.js";
+import { InitMessageLog, makeMessageDiv } from "./frontend/ui.js";
+import { ClientNetwork } from "./frontend/ClientNetwork.js";
+import * as Types from "./shared/types.js";
+import { events } from "./shared/events.js";
+
+const net = new ClientNetwork("ws://192.168.1.208:8080");
 
 const message_input = document.getElementById(
   "message-input",
@@ -14,7 +19,7 @@ function sendMessage() {
     const message: string = message_input.value.trim();
 
     if (message !== "") {
-      sendMessageServer(message);
+      net.sendMessge(message);
 
       message_input.value = "";
     }
@@ -30,3 +35,15 @@ message_input?.addEventListener("keyup", (event: KeyboardEvent) => {
 submit_message?.addEventListener("click", (event: Event) => {
   sendMessage();
 });
+
+//-- Listeners
+
+net.on(events.S_Init, (payload: Types.initPayload) => {
+  InitMessageLog(payload.messageLogs);
+});
+
+net.on(events.S_new_message, (payload: Types.Message) => {
+  makeMessageDiv(payload);
+});
+//------------------------------------
+net.init();

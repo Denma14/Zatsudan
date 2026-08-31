@@ -9,6 +9,7 @@ export type Message = {
 
 export function makeMessageDiv(messageObject: Message) {
   if (textDisplay) {
+    console.log("making message");
     const messageDiv = document.createElement("div");
     messageDiv.className = "message-div";
 
@@ -21,7 +22,9 @@ export function makeMessageDiv(messageObject: Message) {
     textDisplay.appendChild(messageDiv);
     messageDiv.appendChild(id);
     messageDiv.appendChild(message);
+    return;
   }
+  console.log("textDisplay doesnt exist!");
 }
 
 function makeDivs(payload: Message[]) {
@@ -34,7 +37,7 @@ function makeDivs(payload: Message[]) {
   }
 }
 
-export function xdx(payload: Message[]) {
+export function InitMessageLog(payload: Message[]) {
   console.log(payload);
 
   makeDivs(payload);
