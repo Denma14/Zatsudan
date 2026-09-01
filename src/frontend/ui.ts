@@ -2,6 +2,10 @@ const textDisplay = document.getElementById(
   "text-display",
 ) as HTMLBodyElement | null;
 
+const message_input = document.getElementById(
+  "message-input",
+) as HTMLInputElement | null;
+
 export type Message = {
   id: string;
   message: string;
@@ -37,11 +41,18 @@ export function makeMessageDiv(messageObject: Message) {
     message.textContent = messageObject["message"];
     message.className = "message-text";
 
+    const maxScrollableDist =
+      textDisplay.scrollHeight - textDisplay.clientHeight;
+    const shouldAutoScroll = textDisplay.scrollTop >= maxScrollableDist - 10;
+
     textDisplay.appendChild(messageDiv);
     messageDiv.appendChild(id);
     messageDiv.appendChild(message);
 
-    textDisplay.scrollTop = textDisplay.scrollHeight;
+    if (shouldAutoScroll) {
+      textDisplay.scrollTop = textDisplay.scrollHeight;
+    }
+
     return;
   }
   console.log("textDisplay doesnt exist!");
@@ -57,8 +68,18 @@ function makeDivs(payload: Message[]) {
   }
 }
 
-export function InitMessageLog(payload: Message[]) {
+export function InitMessageLog(payload: Message[], clientID: string) {
   console.log(payload);
 
   makeDivs(payload);
+
+  console.log("client id is", clientID);
+
+  if (message_input) {
+    message_input.placeholder = `${clientID} type a message!`;
+  }
+
+  if (textDisplay) {
+    textDisplay.scrollTop = textDisplay.scrollHeight;
+  }
 }

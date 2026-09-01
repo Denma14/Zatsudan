@@ -14,6 +14,7 @@ export class ClientNetwork {
     /* --
     Sets up the WebSocket (ws) for server-client communication
     -- */
+
     this.socket.addEventListener("open", (event) => {
       console.log("ws connection established xdx");
     });

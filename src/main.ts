@@ -45,7 +45,7 @@ submit_message?.addEventListener("click", (event: Event) => {
 //-- Listeners
 
 net.on(events.S_Init, (payload: Types.initPayload) => {
-  InitMessageLog(payload.messageLogs);
+  InitMessageLog(payload.messageLogs, net.client_id);
 });
 
 net.on(events.S_new_message, (payload: Types.Message) => {
