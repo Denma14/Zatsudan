@@ -7,6 +7,20 @@ export type Message = {
   message: string;
 };
 
+function stringToHSL(str: string, saturation = 70, lightness = 35): string {
+  let hash = 0;
+
+  for (let i = 0; i < str.length; i++) {
+    const charCode = str.charCodeAt(i);
+
+    hash = (hash << 5) - hash + charCode;
+    hash |= 0;
+  }
+
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+}
+
 export function makeMessageDiv(messageObject: Message) {
   if (textDisplay) {
     console.log("making message");
@@ -15,9 +29,13 @@ export function makeMessageDiv(messageObject: Message) {
 
     const id = document.createElement("h3");
     id.textContent = messageObject["id"] + ":";
+    id.id = "id-text";
+    id.style.color = stringToHSL(messageObject["id"]);
+    id.style.textDecoration = "underline";
 
     const message = document.createElement("h3");
     message.textContent = messageObject["message"];
+    message.id = "message-text";
 
     textDisplay.appendChild(messageDiv);
     messageDiv.appendChild(id);

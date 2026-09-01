@@ -6,16 +6,27 @@
     <title>Zatsudan</title>
     <!--<link href="style.css" rel="stylesheet" type="text/css" />-->
     <script type="module" src="/src/main.ts"></script>
-    <script type="module" src="/src/frontend/client.ts"></script>
   </head>
   <body>
-    <h1>Zatsudan</h1>
+    <div id="main-body">
+      <div id="header"><h1>Zatsudan</h1></div>
 
-    <div id="text-display"></div>
-    <div>
-      <label for="message-box">Message:</label>
-      <input type="text" name="message-box" id="message-input" />
-      <input for="message-box" type="button" value="xdx" id="submit-message" />
+      <div id="text-display"></div>
+      <div id="message-box">
+        <!--<label for="message-input">Message:</label>-->
+        <input
+          type="text"
+          name="message-input-box"
+          id="message-input"
+          placeholder="Type a message!"
+        />
+        <input
+          for="message-input-box"
+          type="button"
+          value=">"
+          id="submit-message"
+        />
+      </div>
     </div>
   </body>
 </html>

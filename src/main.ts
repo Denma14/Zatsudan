@@ -14,6 +14,12 @@ const submit_message = document.getElementById(
 
 import "./frontend/styles/style.css";
 
+function getRandomColor() {
+  return `#${Math.floor(Math.random() * 16777215)
+    .toString(16)
+    .padStart(6, "0")}`;
+}
+
 function sendMessage() {
   if (message_input) {
     const message: string = message_input.value.trim();
