@@ -29,17 +29,19 @@ export function makeMessageDiv(messageObject: Message) {
 
     const id = document.createElement("h3");
     id.textContent = messageObject["id"] + ":";
-    id.id = "id-text";
+    id.className = "id-text";
     id.style.color = stringToHSL(messageObject["id"]);
     id.style.textDecoration = "underline";
 
     const message = document.createElement("h3");
     message.textContent = messageObject["message"];
-    message.id = "message-text";
+    message.className = "message-text";
 
     textDisplay.appendChild(messageDiv);
     messageDiv.appendChild(id);
     messageDiv.appendChild(message);
+
+    textDisplay.scrollTop = textDisplay.scrollHeight;
     return;
   }
   console.log("textDisplay doesnt exist!");
