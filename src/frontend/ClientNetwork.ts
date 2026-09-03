@@ -17,6 +17,14 @@ export class ClientNetwork {
 
     this.socket.addEventListener("open", (event) => {
       console.log("ws connection established xdx");
+
+      const key = sessionStorage.getItem("id_key");
+      this.socket.send(
+        JSON.stringify({
+          eventType: events.C_handshake,
+          payload: { key: key },
+        }),
+      );
     });
 
     this.socket.addEventListener("message", (event) => {
@@ -50,6 +58,7 @@ export class ClientNetwork {
         console.error;
       }
       this.client_id = payload.id;
+      sessionStorage.setItem("id_key", payload.key);
     });
   }
 

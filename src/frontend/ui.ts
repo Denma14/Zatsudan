@@ -25,16 +25,16 @@ function stringToHSL(str: string, saturation = 70, lightness = 35): string {
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
-export function makeMessageDiv(messageObject: Message) {
+export function makeMessageDiv(messageObject: any) {
   if (textDisplay) {
     console.log("making message");
     const messageDiv = document.createElement("div");
     messageDiv.className = "message-div";
 
     const id = document.createElement("h3");
-    id.textContent = messageObject["id"] + ":";
+    id.textContent = messageObject["username"] + ":";
     id.className = "id-text";
-    id.style.color = stringToHSL(messageObject["id"]);
+    id.style.color = stringToHSL(messageObject["username"]);
     id.style.textDecoration = "underline";
 
     const message = document.createElement("h3");

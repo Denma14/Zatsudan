@@ -22,7 +22,7 @@ export class ServerNetwork {
     this.wss.on("connection", (socket: any) => {
       socket.on("error", console.error);
 
-      //-- Gives user ID for session
+      /*/-- Gives user ID for session
 
       const id = "Anon_" + Math.random().toString(36).substring(2, 10);
       console.log("client ID is : ", id);
@@ -31,25 +31,24 @@ export class ServerNetwork {
 
       this.sendMessage(socket, events.S_Hand_ID, { id: id });
 
-      //---------------------------------------------
-      const initCallback = this.listeners.get(events.S_Init);
-
-      if (initCallback) {
-        initCallback(socket, id);
-      }
-
-      //this.sendMessage(socket, events.S_Init, { messageLogs: get_messages() });
-
-      //-------------------------------------------
-
-      //-- Clean up
+      //-- Clean up*/
 
       socket.on("close", (code: any, reason: any) => {
+        const token = socket.token;
+        if (!token) return;
+
+        const session = this.clientIds.get(token);
+        if (!session) return;
+
         console.log(code, reason);
-        const id = this.clientIds.get(socket);
-        console.log("socket : ", id, "disconnected");
-        this.clientIds.delete(socket);
-        console.log(this.clientIds);
+
+        const timeoutId = setTimeout(() => {
+          this.clientIds.delete(token);
+          console.log("socket : ", session.id, "disconnected");
+          console.log(this.clientIds);
+        }, 5000);
+
+        session.timeoutId = timeoutId;
       });
 
       //-----------------------------------------------

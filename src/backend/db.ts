@@ -3,7 +3,7 @@ import * as types from "../shared/types.js";
 
 import Database from "better-sqlite3";
 
-const db = new Database("app.db", { verbose: console.log });
+const db = new Database("app.db"); //add for debugging{ verbose: console.log }
 
 db.pragma("journal_mode = WAL");
 
@@ -32,8 +32,16 @@ export const saveMessage = db.transaction((userId: string, content: string) => {
 });
 
 export function getMessageLog(limit: number = 100) {
-  const initMessageLog = db.prepare(
-    "SELECT user_id AS id, content AS message FROM (SELECT * FROM messages ORDER BY id DESC LIMIT ?) ORDER BY id ASC",
-  );
+  const initMessageLog = db.prepare(`
+      SELECT id, user_id AS username, content AS message 
+      FROM (
+        SELECT id, user_id, content 
+        FROM messages 
+        ORDER BY id DESC 
+        LIMIT ?
+      ) 
+      ORDER BY id ASC
+    `);
+
   return initMessageLog.all(limit);
 }

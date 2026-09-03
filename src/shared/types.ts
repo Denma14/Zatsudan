@@ -31,6 +31,7 @@ export interface messagePayload {
 
 export interface idPayload {
   id: string;
+  key: string;
 }
 
 export interface initPayload {
