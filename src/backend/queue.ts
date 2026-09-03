@@ -9,7 +9,7 @@ export function sum(a: number, b: number) {
   return a + b;
 }
 
-export function add_message(message_string?: string, ID?: string) {
+export function add_message(ID: string, message_string: string) {
   if (message_string) {
     if (!ID) {
       var message: Message = { id: "xdx", message: message_string };
