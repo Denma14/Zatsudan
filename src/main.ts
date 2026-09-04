@@ -42,8 +42,16 @@ net.on(events.S_Init, (payload: Types.initPayload) => {
   InitMessageLog(payload.messageLogs, net.client_id);
 });
 
-net.on(events.S_new_message, (payload: Types.Message) => {
+net.on(events.S_new_message, (payload: Types.S_messagePayload) => {
   makeMessageDiv(payload);
+});
+
+net.on(events.S_Hand_ID, (payload: Types.idPayload) => {
+  if (!payload.username) {
+    console.error;
+  }
+  net.client_id = payload.username;
+  sessionStorage.setItem("id_key", payload.key);
 });
 //------------------------------------
 net.init();

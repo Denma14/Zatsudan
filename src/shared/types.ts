@@ -1,40 +1,51 @@
 import { events } from "./events.js";
 
-export type Message = {
-  id: string;
-  message: string;
-};
-
-//-- Signal Types --
-export interface messageSignal {
-  eventType: number;
-  payload: { id: string; message: string };
-}
-
-export interface idSignal {
-  eventType: 5;
-  payload: { id: string };
-}
-
-export interface initSignal {
-  eventType: 3;
-  payload: { messageLogs: Message[] };
-}
-//---------------------------
-
 // Payload Types --
 
-export interface messagePayload {
-  id: string;
-  message: string;
+export interface C_messagePayload {
+  username: string;
+  content: string;
+}
+
+export interface S_messagePayload {
+  id: number;
+  username: string;
+  content: string;
+  created_at: string;
 }
 
 export interface idPayload {
-  id: string;
+  username: string;
+  key: string;
+}
+
+export interface handshakePayload {
   key: string;
 }
 
 export interface initPayload {
-  messageLogs: Message[];
+  messageLogs: S_messagePayload[];
+}
+//---------------------------
+
+//-- Signal Types --
+export interface C_messageSignal {
+  eventType: number;
+  payload: C_messagePayload;
+}
+
+export interface S_messageSignal {
+  eventType: number;
+  payload: S_messagePayload;
+}
+
+export interface idSignal {
+  eventType: 5;
+  payload: idPayload;
+}
+
+export interface initSignal {
+  eventType: 3;
+  payload: initPayload;
 }
 //---------------------------

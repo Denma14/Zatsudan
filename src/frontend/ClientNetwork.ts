@@ -52,20 +52,12 @@ export class ClientNetwork {
     this.socket.addEventListener("error", (error) => {
       console.error("WebSocket error:", error);
     });
-
-    this.on(events.S_Hand_ID, (payload: Types.idPayload) => {
-      if (!payload.id) {
-        console.error;
-      }
-      this.client_id = payload.id;
-      sessionStorage.setItem("id_key", payload.key);
-    });
   }
 
-  sendMessge(message: string) {
-    const C_message: Types.messageSignal = {
+  sendMessge(content: string) {
+    const C_message: Types.C_messageSignal = {
       eventType: events.C_Send_message,
-      payload: { id: this.client_id, message: message },
+      payload: { username: this.client_id, content: content },
     };
     this.socket.send(JSON.stringify(C_message));
   }

@@ -6,7 +6,7 @@ db.pragma("journal_mode = WAL");
 
 db.exec(/*sql*/ `CREATE TABLE IF NOT EXISTS messages(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT NOT NULL,
+    username TEXT NOT NULL,
     content TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )`);
@@ -21,21 +21,25 @@ const pruneStmt = db.prepare(/*sql*/ `
       `);
 
 const insertStmt = db.prepare(
-  /*sql*/ `INSERT INTO messages (user_id, content) VALUES (?,?)`,
+  /*sql*/ `INSERT INTO messages (username, content) VALUES (?,?)`,
 );
 
+const selectStmt = db.prepare(/*sql*/ `SELECT * FROM messages WHERE id = ?`);
+
 export const saveMessage = db.transaction(
-  /*sql*/ (userId: string, content: string) => {
-    insertStmt.run(userId, content);
+  /*sql*/ (username: string, content: string) => {
+    const info = insertStmt.run(username, content);
     pruneStmt.run();
+
+    return selectStmt.get(info.lastInsertRowid);
   },
 );
 
 export function getMessageLog(limit: number = 100) {
   const initMessageLog = db.prepare(/*sql*/ `
-      SELECT id, user_id AS username, content AS message 
+      SELECT id, username, content, created_at 
       FROM (
-        SELECT id, user_id, content 
+        SELECT id, username, content, created_at
         FROM messages 
         ORDER BY id DESC 
         LIMIT ?

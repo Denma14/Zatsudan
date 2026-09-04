@@ -1,3 +1,5 @@
+import * as types from "../shared/types.js";
+
 const textDisplay = document.getElementById(
   "text-display",
 ) as HTMLBodyElement | null;
@@ -5,11 +7,6 @@ const textDisplay = document.getElementById(
 const message_input = document.getElementById(
   "message-input",
 ) as HTMLInputElement | null;
-
-export type Message = {
-  id: string;
-  message: string;
-};
 
 function stringToHSL(str: string, saturation = 70, lightness = 35): string {
   let hash = 0;
@@ -25,20 +22,21 @@ function stringToHSL(str: string, saturation = 70, lightness = 35): string {
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 }
 
-export function makeMessageDiv(messageObject: any) {
+export function makeMessageDiv(messageObject: types.S_messagePayload) {
+  console.log(messageObject);
   if (textDisplay) {
     console.log("making message");
     const messageDiv = document.createElement("div");
     messageDiv.className = "message-div";
 
-    const id = document.createElement("h3");
-    id.textContent = messageObject["username"] + ":";
-    id.className = "id-text";
-    id.style.color = stringToHSL(messageObject["username"]);
-    id.style.textDecoration = "underline";
+    const username = document.createElement("h3");
+    username.textContent = messageObject["username"] + ":";
+    username.className = "username-text";
+    username.style.color = stringToHSL(messageObject["username"]);
+    username.style.textDecoration = "underline";
 
     const message = document.createElement("h3");
-    message.textContent = messageObject["message"];
+    message.textContent = messageObject["content"];
     message.className = "message-text";
 
     const maxScrollableDist =
@@ -46,7 +44,7 @@ export function makeMessageDiv(messageObject: any) {
     const shouldAutoScroll = textDisplay.scrollTop >= maxScrollableDist - 10;
 
     textDisplay.appendChild(messageDiv);
-    messageDiv.appendChild(id);
+    messageDiv.appendChild(username);
     messageDiv.appendChild(message);
 
     if (shouldAutoScroll) {
@@ -58,7 +56,7 @@ export function makeMessageDiv(messageObject: any) {
   console.log("textDisplay doesnt exist!");
 }
 
-function makeDivs(payload: Message[]) {
+function makeDivs(payload: types.S_messagePayload[]) {
   if (textDisplay) {
     for (let i in payload) {
       if (payload[i]) {
@@ -68,7 +66,10 @@ function makeDivs(payload: Message[]) {
   }
 }
 
-export function InitMessageLog(payload: Message[], clientID: string) {
+export function InitMessageLog(
+  payload: types.S_messagePayload[],
+  clientID: string,
+) {
   console.log(payload);
 
   makeDivs(payload);

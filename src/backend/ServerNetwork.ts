@@ -1,11 +1,9 @@
 import NodeWebsocket, { WebSocketServer } from "ws";
-import { add_message, get_messages } from "./queue.js";
-import { events } from "../shared/events.js";
-import * as Types from "../shared/types.js";
+import * as types from "./types.js";
 
 export class ServerNetwork {
   wss;
-  clientIds;
+  clientIds: Map<string, types.ClientSession>;
   listeners: Map<number, Function>;
   constructor(port: number) {
     this.wss = new WebSocketServer({
@@ -22,29 +20,26 @@ export class ServerNetwork {
     this.wss.on("connection", (socket: any) => {
       socket.on("error", console.error);
 
-      /*/-- Gives user ID for session
-
-      const id = "Anon_" + Math.random().toString(36).substring(2, 10);
-      console.log("client ID is : ", id);
-      this.clientIds.set(socket, id);
-      console.log("wss made");
-
-      this.sendMessage(socket, events.S_Hand_ID, { id: id });
-
       //-- Clean up*/
 
       socket.on("close", (code: any, reason: any) => {
+        socket.on("error", console.error);
         const token = socket.token;
         if (!token) return;
 
         const session = this.clientIds.get(token);
         if (!session) return;
 
+        if (session.socket !== socket) {
+          console.log("guard to check so dead sockets dont activate deletion");
+          return;
+        }
+
         console.log(code, reason);
 
         const timeoutId = setTimeout(() => {
           this.clientIds.delete(token);
-          console.log("socket : ", session.id, "disconnected");
+          console.log("socket : ", session.username, "disconnected");
           console.log(this.clientIds);
         }, 5000);
 
@@ -53,9 +48,17 @@ export class ServerNetwork {
 
       //-----------------------------------------------
 
-      //-- Message replication
+      //-- listener setup
       socket.on("message", (data: any, isBinary: any) => {
-        const socketID = this.clientIds.get(socket);
+        socket.on("error", console.error);
+        const token = (socket as any).token;
+        const session = this.clientIds.get(token);
+        if (session) {
+          var socketID = session.username;
+        } else {
+          var socketID = "xdx";
+        }
+
         const parsedData = JSON.parse(data);
         console.log(socketID, "sent ", parsedData);
 
@@ -72,15 +75,15 @@ export class ServerNetwork {
     });
   }
 
-  sendMessage(socket: any, eventType: number, message: any) {
-    socket.send(JSON.stringify({ eventType: eventType, payload: message }));
+  sendMessage(socket: any, eventType: number, content: any) {
+    socket.send(JSON.stringify({ eventType: eventType, payload: content }));
   }
 
-  broadcast(eventType: number, message: any) {
+  broadcast(eventType: number, content: any) {
     this.wss.clients.forEach(function each(client: any) {
       if (client.readyState === NodeWebsocket.OPEN) {
         console.log("firing clients");
-        client.send(JSON.stringify({ eventType: eventType, payload: message }));
+        client.send(JSON.stringify({ eventType: eventType, payload: content }));
         return;
       }
       console.log("socket is not open");

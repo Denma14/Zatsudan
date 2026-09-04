@@ -17,32 +17,26 @@ const serverNet = new ServerNetwork(8080);
 
 serverNet.on(
   events.C_Send_message,
-  (socket: any, socketID: string, payload: types.Message) => {
+  (socket: any, socketID: string, payload: types.C_messagePayload) => {
     console.log(payload);
 
-    const { id, message } = payload;
+    if (!payload.username) return;
 
-    const C_new_message = add_message(id, message);
+    const { username, content } = payload;
 
-    saveMessage(id, message);
+    const latestMessage = saveMessage(username, content);
 
-    if (!C_new_message) {
-      console.error("Failed to add message.");
-      return;
-    }
-
-    serverNet.broadcast(events.S_new_message, C_new_message);
+    serverNet.broadcast(events.S_new_message, latestMessage);
   },
 );
 
 serverNet.on(
   events.C_handshake,
-  (socket: any, id: undefined, payload: types.idPayload) => {
+  (socket: any, username: undefined, payload: types.handshakePayload) => {
     // -- Checks if your session hasn't ended and distributes ID
-    const hasToken = serverNet.clientIds.has(payload.key);
+    const existingSession = serverNet.clientIds.get(payload.key);
 
-    if (hasToken) {
-      const existingSession = serverNet.clientIds.get(payload.key);
+    if (existingSession) {
       if (existingSession.timeoutId) {
         console.log("there's a timeout id");
         clearTimeout(existingSession.timeoutId);
@@ -50,27 +44,33 @@ serverNet.on(
       console.log("user Exists");
       serverNet.clientIds.set(payload.key, {
         socket: socket,
-        id: existingSession.id,
+        username: existingSession.username,
         timeoutId: null,
       });
+
       (socket as any).token = payload.key;
+
       serverNet.sendMessage(socket, events.S_Hand_ID, {
-        id: existingSession.id,
-        key: existingSession.key,
+        username: existingSession.username,
+        key: payload.key,
       });
     } else {
+      // generates an id and token if there's no existing session key
       const token = crypto.randomUUID();
       const client_id = "Anon_" + Math.random().toString(36).substring(2, 10);
       console.log("client ID and UUID is : ", client_id, token);
-      serverNet.clientIds.set(token, { socket: socket, id: client_id });
+      serverNet.clientIds.set(token, {
+        socket: socket,
+        username: client_id,
+        timeoutId: null,
+      });
       console.log("wss made");
 
       (socket as any).token = token;
 
       serverNet.sendMessage(socket, events.S_Hand_ID, {
-        id: client_id,
+        username: client_id,
         key: token,
-        timeoutId: null,
       });
     }
 
@@ -80,7 +80,7 @@ serverNet.on(
     serverNet.sendMessage(socket, events.S_Init, {
       messageLogs: messageLog,
     });
-    console.log("message logs: ", messageLog);
+    //console.log("message logs: ", messageLog);
   },
 );
 
