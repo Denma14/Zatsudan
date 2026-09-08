@@ -28,6 +28,7 @@ export function makeMessageDiv(messageObject: types.S_messagePayload) {
     console.log("making message");
     const messageDiv = document.createElement("div");
     messageDiv.className = "message-div";
+    messageDiv.id = String(messageObject.id);
 
     const username = document.createElement("h3");
     username.textContent = messageObject["username"] + " :";

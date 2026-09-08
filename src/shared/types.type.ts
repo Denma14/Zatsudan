@@ -26,6 +26,10 @@ export interface handshakePayload {
 export interface initPayload {
   messageLogs: S_messagePayload[];
 }
+
+export interface limitErrorPayload {
+  error: string;
+}
 //---------------------------
 
 //-- Signal Types --
@@ -40,12 +44,17 @@ export interface S_messageSignal {
 }
 
 export interface idSignal {
-  eventType: 5;
+  eventType: number;
   payload: idPayload;
 }
 
 export interface initSignal {
-  eventType: 3;
+  eventType: number;
   payload: initPayload;
+}
+
+export interface rateLimitErrorSignal {
+  eventType: number;
+  payload: limitErrorPayload;
 }
 //---------------------------

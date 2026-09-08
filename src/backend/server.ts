@@ -42,6 +42,9 @@ serverNet.on(
     } else {
       console.log(session.username, "is rate limited");
       session.strikes++;
+      serverNet.sendMessage(socket, events.S_message_limit_error, {
+        error: `${session.strikes}/10 strikes left`,
+      });
 
       if (session.strikes > 10) {
         console.log("client has exceeded limit disconnecting socket");
