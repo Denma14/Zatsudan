@@ -57,6 +57,27 @@ export function makeMessageDiv(messageObject: types.S_messagePayload) {
   console.log("textDisplay doesnt exist!");
 }
 
+export function deleteMessageDiv(messageObject: any) {
+  if (textDisplay) {
+    console.log("deleting message id: ", messageObject);
+    const messageDiv = document.getElementById(
+      String(messageObject),
+    ) as HTMLBodyElement;
+
+    if (messageDiv) {
+      messageDiv.remove();
+    }
+  }
+}
+
+export function deleteSpam(messageObject: any) {
+  if (textDisplay) {
+    for (let i in messageObject) {
+      deleteMessageDiv(messageObject[i]);
+    }
+  }
+}
+
 function makeDivs(payload: types.S_messagePayload[]) {
   if (textDisplay) {
     for (let i in payload) {

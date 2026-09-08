@@ -35,6 +35,25 @@ export const saveMessage = db.transaction(
   },
 );
 
+const deleteSpamStmt = db.prepare(
+  /*sql */
+  `DELETE FROM messages 
+  WHERE id IN (
+    SELECT id FROM messages 
+    WHERE username = ? 
+    ORDER BY created_at DESC 
+    LIMIT 5
+  ) RETURNING id`,
+);
+
+export function deleteSpam(username: string) {
+  const deletedRows = deleteSpamStmt.all(username);
+
+  const deletedRowsId = deletedRows.map((row: any) => row.id);
+
+  return deletedRowsId;
+}
+
 export function getMessageLog(limit: number = 100) {
   const initMessageLog = db.prepare(/*sql*/ `
       SELECT id, username, content, created_at 

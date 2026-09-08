@@ -8,7 +8,7 @@ import { events } from "../shared/events.js";
 import * as types_c from "../shared/types.type.js";
 import * as types_s from "./types.type.js";
 
-import { saveMessage, getMessageLog } from "./db.js";
+import { saveMessage, getMessageLog, deleteSpam } from "./db.js";
 
 const serverNet = new ServerNetwork(8080);
 
@@ -48,6 +48,10 @@ serverNet.on(
 
       if (session.strikes > 10) {
         console.log("client has exceeded limit disconnecting socket");
+        const deletedMessageId = deleteSpam(session.username);
+        serverNet.broadcast(events.S_delete_spam_message, {
+          deletedMessageId: deletedMessageId,
+        });
         socket.close();
       }
     }
