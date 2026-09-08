@@ -1,4 +1,4 @@
-import * as types from "../shared/types.js";
+import * as types from "../shared/types.type.js";
 
 const textDisplay = document.getElementById(
   "text-display",
@@ -30,7 +30,7 @@ export function makeMessageDiv(messageObject: types.S_messagePayload) {
     messageDiv.className = "message-div";
 
     const username = document.createElement("h3");
-    username.textContent = messageObject["username"] + ":";
+    username.textContent = messageObject["username"] + " :";
     username.className = "username-text";
     username.style.color = stringToHSL(messageObject["username"]);
     username.style.textDecoration = "underline";

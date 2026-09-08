@@ -1,9 +1,12 @@
 import NodeWebsocket, { WebSocketServer } from "ws";
 
-import { ServerNetwork } from "./ServerNetwork.js";
+import { ServerNetwork } from "./ServerNetwork.class.js";
+import { RateLimiter } from "./RateLimiter.class.js";
+
 import { add_message, get_messages } from "./queue.js";
 import { events } from "../shared/events.js";
-import * as types from "../shared/types.js";
+import * as types_c from "../shared/types.type.js";
+import * as types_s from "./types.type.js";
 
 import { saveMessage, getMessageLog } from "./db.js";
 
@@ -17,22 +20,40 @@ const serverNet = new ServerNetwork(8080);
 
 serverNet.on(
   events.C_Send_message,
-  (socket: any, socketID: string, payload: types.C_messagePayload) => {
+  (socket: any, socketID: string, payload: types_c.C_messagePayload) => {
     console.log(payload);
+    console.log("client's token is ", socket.token);
+
+    const session: types_s.ClientSession | undefined = serverNet.clientIds.get(
+      socket.token,
+    );
+
+    if (!session) return;
 
     if (!payload.username) return;
 
-    const { username, content } = payload;
+    if (session.RateLimiter.allowMessage()) {
+      const { username, content } = payload;
 
-    const latestMessage = saveMessage(username, content);
+      const latestMessage = saveMessage(username, content);
 
-    serverNet.broadcast(events.S_new_message, latestMessage);
+      serverNet.broadcast(events.S_new_message, latestMessage);
+      return;
+    } else {
+      console.log(session.username, "is rate limited");
+      session.strikes++;
+
+      if (session.strikes > 10) {
+        console.log("client has exceeded limit disconnecting socket");
+        socket.close();
+      }
+    }
   },
 );
 
 serverNet.on(
   events.C_handshake,
-  (socket: any, username: undefined, payload: types.handshakePayload) => {
+  (socket: any, username: undefined, payload: types_c.handshakePayload) => {
     // -- Checks if your session hasn't ended and distributes ID
     const existingSession = serverNet.clientIds.get(payload.key);
 
@@ -46,6 +67,8 @@ serverNet.on(
         socket: socket,
         username: existingSession.username,
         timeoutId: null,
+        RateLimiter: new RateLimiter(),
+        strikes: 0,
       });
 
       (socket as any).token = payload.key;
@@ -63,6 +86,8 @@ serverNet.on(
         socket: socket,
         username: client_id,
         timeoutId: null,
+        RateLimiter: new RateLimiter(),
+        strikes: 0,
       });
       console.log("wss made");
 

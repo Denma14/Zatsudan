@@ -1,5 +1,5 @@
 import NodeWebsocket, { WebSocketServer } from "ws";
-import * as types from "./types.js";
+import * as types from "./types.type.js";
 
 export class ServerNetwork {
   wss;

@@ -1,5 +1,5 @@
 import { events } from "../shared/events.js";
-import * as Types from "../shared/types.js";
+import * as Types from "../shared/types.type.js";
 export class ClientNetwork {
   socket: WebSocket;
   client_id: string;

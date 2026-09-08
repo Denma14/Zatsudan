@@ -1,6 +1,6 @@
 import { InitMessageLog, makeMessageDiv } from "./frontend/ui.js";
 import { ClientNetwork } from "./frontend/ClientNetwork.js";
-import * as Types from "./shared/types.js";
+import * as Types from "./shared/types.type.js";
 import { events } from "./shared/events.js";
 
 const net = new ClientNetwork("ws://192.168.1.208:8080");
