@@ -106,3 +106,25 @@ export function InitMessageLog(
     textDisplay.scrollTop = textDisplay.scrollHeight;
   }
 }
+
+export function displayError(payload: any) {
+  if (textDisplay) {
+    const errorOverlay = document.getElementById("warning-overlay");
+    if (errorOverlay) {
+      errorOverlay.remove();
+    }
+
+    const newErrorOverlay = document.createElement("div");
+    newErrorOverlay.id = "warning-overlay";
+
+    const errorMessage = document.createElement("h1");
+    errorMessage.textContent = `Error : ${payload.error}`;
+
+    textDisplay.appendChild(newErrorOverlay);
+    newErrorOverlay.appendChild(errorMessage);
+
+    setTimeout(() => {
+      newErrorOverlay.remove();
+    }, 2500);
+  }
+}

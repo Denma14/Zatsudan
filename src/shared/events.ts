@@ -8,4 +8,5 @@ export const events = {
   S_Hand_ID: 5,
   S_message_limit_error: 6,
   S_delete_spam_message: 7,
+  S_error: 8,
 };

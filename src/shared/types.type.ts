@@ -27,6 +27,10 @@ export interface initPayload {
   messageLogs: S_messagePayload[];
 }
 
+export interface deleteSpamPayload {
+  deletedMessageId: any;
+}
+
 export interface limitErrorPayload {
   error: string;
 }

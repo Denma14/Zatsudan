@@ -1,4 +1,9 @@
-import { InitMessageLog, makeMessageDiv, deleteSpam } from "./frontend/ui.js";
+import {
+  InitMessageLog,
+  makeMessageDiv,
+  deleteSpam,
+  displayError,
+} from "./frontend/ui.js";
 import { ClientNetwork } from "./frontend/ClientNetwork.js";
 import * as Types from "./shared/types.type.js";
 import { events } from "./shared/events.js";
@@ -19,6 +24,10 @@ function sendMessage() {
     const message: string = message_input.value.trim();
 
     if (message !== "") {
+      if (message.length > 500) {
+        displayError({ error: "Message exceeded character limit." });
+        return;
+      }
       net.sendMessge(message);
 
       message_input.value = "";
@@ -54,11 +63,20 @@ net.on(events.S_Hand_ID, (payload: Types.idPayload) => {
   sessionStorage.setItem("id_key", payload.key);
 });
 
-net.on(events.S_delete_spam_message, (payload: any) => {
+net.on(events.S_delete_spam_message, (payload: Types.deleteSpamPayload) => {
+  console.log("deleting spam messages");
   if (payload.deletedMessageId) {
     deleteSpam(payload.deletedMessageId);
     console.log("deletedMessage is ", payload.deletedMessageId);
   }
+});
+
+net.on(events.S_message_limit_error, (payload: Types.limitErrorPayload) => {
+  displayError(payload);
+});
+
+net.on(events.S_error, (payload: any) => {
+  displayError(payload);
 });
 //------------------------------------
 net.init();

@@ -6,7 +6,7 @@ import { RateLimiter } from "./RateLimiter.class.js";
 import { add_message, get_messages } from "./queue.js";
 import { events } from "../shared/events.js";
 import * as types_c from "../shared/types.type.js";
-import * as types_s from "./types.type.js";
+import * as types_s from "./types/types.type.js";
 
 import { saveMessage, getMessageLog, deleteSpam } from "./db.js";
 
@@ -34,6 +34,13 @@ serverNet.on(
 
     if (session.RateLimiter.allowMessage()) {
       const { username, content } = payload;
+
+      if (content.length > 500) {
+        serverNet.sendMessage(socket, events.S_error, {
+          error: "Message exceeded character limit.",
+        });
+        return;
+      }
 
       const latestMessage = saveMessage(username, content);
 

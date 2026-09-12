@@ -1,4 +1,4 @@
-import { RateLimiter } from "./RateLimiter.class.js";
+import { RateLimiter } from "../RateLimiter.class.js";
 
 export interface ClientSession {
   socket: WebSocket;
