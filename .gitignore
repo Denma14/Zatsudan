@@ -7,3 +7,12 @@ eslint.config.mts
 vite.config.ts
 tsconfig.json
 plans.md
+
+*.js
+*.js.map
+*.d.ts
+*.d.ts.map
+*d.mts
+*d.mts.map
+*.mjs
+*.mjs.map
