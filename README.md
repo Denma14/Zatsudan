@@ -16,7 +16,7 @@ Zatsudan allows users to jump into a global chat without accounts or friction. T
 
 ## Roadmap
 
-- [ ] **Deployment:** Implement an automated GitHub Actions CI/CD pipeline targeting the `zatsudan-deploy` frontend repository (currently private).
+- [ ] **Deployment:** Implement an automated GitHub Actions CI/CD pipeline targeting the `zatsudan-deploy` frontend repository (currently private and not in use).
 - [ ] **Frontend Overhaul:** Refactor the UI/UX using React for better state management and component structure.
 - [ ] **Scalability:** Upgrade the backend architecture to support multi-room chatboxes for distinct topics.
 - [ ] **Moderation:** Implement an IP-based temporary ban system for platform violators.
