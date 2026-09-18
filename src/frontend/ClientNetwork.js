@@ -1,0 +1,57 @@
+import { events } from "../shared/events.js";
+import * as Types from "../shared/types.type.js";
+export class ClientNetwork {
+    socket;
+    client_id;
+    listeners;
+    constructor(address) {
+        this.socket = new WebSocket(address);
+        this.client_id = "";
+        this.listeners = new Map();
+    }
+    init() {
+        /* --
+        Sets up the WebSocket (ws) for server-client communication
+        -- */
+        this.socket.addEventListener("open", (event) => {
+            console.log("ws connection established xdx");
+            const key = sessionStorage.getItem("id_key");
+            this.socket.send(JSON.stringify({
+                eventType: events.C_handshake,
+                payload: { key: key },
+            }));
+        });
+        this.socket.addEventListener("message", (event) => {
+            console.log("got a message from server");
+            const eventData = JSON.parse(event.data);
+            console.log(eventData);
+            console.log(eventData["eventType"]);
+            if (!eventData) {
+                console.error("Invalid EventData");
+            }
+            const callback = this.listeners.get(eventData["eventType"]);
+            if (callback) {
+                callback(eventData["payload"]);
+            }
+        });
+        // Executes when the connection is closed, providing the close code and reason.
+        this.socket.addEventListener("close", (event) => {
+            console.log("WebSocket connection closed:", event.code, event.reason);
+        });
+        // Executes if an error occurs during the WebSocket communication.
+        this.socket.addEventListener("error", (error) => {
+            console.error("WebSocket error:", error);
+        });
+    }
+    sendMessge(content) {
+        const C_message = {
+            eventType: events.C_Send_message,
+            payload: { username: this.client_id, content: content },
+        };
+        this.socket.send(JSON.stringify(C_message));
+    }
+    on(eventType, callback) {
+        this.listeners.set(eventType, callback);
+    }
+}
+//# sourceMappingURL=ClientNetwork.js.map
