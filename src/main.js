@@ -5,6 +5,8 @@ import { events } from "./shared/events.js";
 const net = new ClientNetwork("https://officials-resistant-formal-groove.trycloudflare.com");
 const message_input = document.getElementById("message-input");
 const submit_message = document.getElementById("submit-message");
+const disclaimer = document.getElementById("disclaimer");
+const disclaimerExit = document.getElementById("disclaimer-exit");
 import "./frontend/styles/style.css";
 function sendMessage() {
     if (message_input) {
@@ -26,6 +28,11 @@ message_input?.addEventListener("keyup", (event) => {
 });
 submit_message?.addEventListener("click", (event) => {
     sendMessage();
+});
+disclaimerExit?.addEventListener("click", () => {
+    if (disclaimer) {
+        disclaimer.remove();
+    }
 });
 //-- Listeners
 net.on(events.S_Init, (payload) => {
