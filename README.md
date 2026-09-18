@@ -23,4 +23,4 @@ Zatsudan allows users to jump into a global chat without accounts or friction. T
 
 ## Notice
 
-By using Zatsudan, you agree to the Terms of Service and Community Guidelines _(Coming Soon)_.
+By using Zatsudan, you agree to the [Terms of Service and Community Guidelines](https://github.com/Denma14/Zatsudan/blob/master/Terms.md).
