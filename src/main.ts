@@ -19,6 +19,14 @@ const submit_message = document.getElementById(
   "submit-message",
 ) as HTMLInputElement | null;
 
+const disclaimer = document.getElementById(
+  "disclaimer",
+) as HTMLInputElement | null;
+
+const disclaimerExit = document.getElementById(
+  "disclaimer-exit",
+) as HTMLInputElement | null;
+
 import "./frontend/styles/style.css";
 
 function sendMessage() {
@@ -45,6 +53,12 @@ message_input?.addEventListener("keyup", (event: KeyboardEvent) => {
 
 submit_message?.addEventListener("click", (event: Event) => {
   sendMessage();
+});
+
+disclaimerExit?.addEventListener("click", () => {
+  if (disclaimer) {
+    disclaimer.remove();
+  }
 });
 
 //-- Listeners
