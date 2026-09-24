@@ -9,7 +9,7 @@ import * as Types from "./shared/types.type.js";
 import { events } from "./shared/events.js";
 
 const net = new ClientNetwork(
-  "https://officials-resistant-formal-groove.trycloudflare.com",
+  "https://wilson-absence-traveller-august.trycloudflare.com",
 );
 
 const message_input = document.getElementById(
