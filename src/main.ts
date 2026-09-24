@@ -8,9 +8,7 @@ import { ClientNetwork } from "./frontend/ClientNetwork.js";
 import * as Types from "./shared/types.type.js";
 import { events } from "./shared/events.js";
 
-const net = new ClientNetwork(
-  "https://wilson-absence-traveller-august.trycloudflare.com",
-);
+const net = new ClientNetwork("https://code-pays-all-saturn.trycloudflare.com");
 
 const message_input = document.getElementById(
   "message-input",
